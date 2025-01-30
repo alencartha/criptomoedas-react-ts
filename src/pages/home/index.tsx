@@ -113,7 +113,7 @@ export function Home() {
         <tbody id="tbody">
           {coins.length > 0 &&
             coins.map((coin) => (
-              <tr className={styles.tr}>
+              <tr className={styles.tr} key={coin.id}>
                 <td className={styles.tdLabel} data-label="Moeda">
                   <div className={styles.name}>
                     <img
