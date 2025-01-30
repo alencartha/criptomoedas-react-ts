@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./home.module.css";
 
-interface CryptoDataProp {
+export interface CryptoDataProp {
   id: string;
   rank: string;
   symbol: string;
