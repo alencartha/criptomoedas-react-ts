@@ -1,28 +1,72 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./home.module.css";
 
+interface CryptoDataProp {
+  id: string;
+  rank: string;
+  symbol: string;
+  name: string;
+  supply: string;
+  maxSupply: string;
+  marketCapUsd: string;
+  volumeUsd24Hr: string;
+  priceUsd: string;
+  changePercent24Hr: string;
+  vwap24Hr: string;
+  explorer: string;
+}
+
+interface DataProp {
+  data: Array<CryptoDataProp>;
+}
+
 export function Home() {
   const [input, setInput] = useState("");
+  const [coins, setCoins] = useState<Array<CryptoDataProp>>([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  async function getData() {
+    fetch("https://api.coincap.io/v2/assets?limit=10&offset=0")
+      .then((response) => response.json())
+      .then((data: DataProp) => {
+        const coinData = data.data;
+
+        const price = Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        });
+
+        const formatedResult = coinData.map((item) => {
+          const formated = {
+            ...item,
+            formatedPrice: price.format(Number(item.priceUsd)),
+          };
+
+          return formated;
+          
+        });
+      });     
+  }
 
   const navigate = useNavigate();
 
   function handleSubmit(event: FormEvent) {
-
     event.preventDefault();
 
-    if(input === ""){
+    if (input === "") {
       return;
     }
 
-    navigate(`detail/${input}`)
+    navigate(`detail/${input}`);
   }
 
-  function handleGetMore(){
-
-  }
+  function handleGetMore() {}
 
   return (
     <main className={styles.container}>
@@ -78,7 +122,9 @@ export function Home() {
         </tbody>
       </table>
 
-      <button className={styles.buttonMore} onClick={handleGetMore}>Carregar mais</button>
+      <button className={styles.buttonMore} onClick={handleGetMore}>
+        Carregar mais
+      </button>
     </main>
   );
 }
