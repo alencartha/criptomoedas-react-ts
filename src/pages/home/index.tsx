@@ -1,23 +1,42 @@
-import { BsSearch } from  'react-icons/bs'
-import { Link } from 'react-router' 
+import { useState, FormEvent } from "react";
+import { BsSearch } from "react-icons/bs";
+import { Link, useNavigate } from "react-router-dom";
 
-import styles from './home.module.css'
-
+import styles from "./home.module.css";
 
 export function Home() {
+  const [input, setInput] = useState("");
+
+  const navigate = useNavigate();
+
+  function handleSubmit(event: FormEvent) {
+
+    event.preventDefault();
+
+    if(input === ""){
+      return;
+    }
+
+    navigate(`detail/${input}`)
+  }
+
+  function handleGetMore(){
+    
+  }
 
   return (
     <main className={styles.container}>
-      <form className={styles.form}>
-        <input 
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <input
           type="text"
           placeholder="Digite o nome da moeda... EX: bitcoin"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
         <button type="submit">
           <BsSearch size={30} color="#FFF" />
         </button>
       </form>
-
 
       <table>
         <thead>
@@ -31,9 +50,7 @@ export function Home() {
         </thead>
 
         <tbody id="tbody">
-
           <tr className={styles.tr}>
-
             <td className={styles.tdLabel} data-label="Moeda">
               <div className={styles.name}>
                 <Link to={"/detail/bitcoin"}>
@@ -57,12 +74,11 @@ export function Home() {
             <td className={styles.tdLabel} data-label="Mudança 24h">
               <span>1.20</span>
             </td>
-
           </tr>
-
         </tbody>
       </table>
 
+      <button className={styles.buttonMore} onClick={handleGetMore}>Carregar mais</button>
     </main>
-  )
+  );
 }
